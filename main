@@ -1,0 +1,47 @@
+import os
+import openai
+
+
+
+
+
+def ask_gpt(message_history, model="gpt-4-1106-preview", max_tokens=2000, temperature=1, return_str=True):
+    # Make a chat completion request to OpenAI
+    response = openai.chat.ChatCompletion.create(
+        model=model,
+        messages=message_history,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    # Return the response as a string or as the full response object
+    if return_str:
+        return response.choices[0].message['content']
+    else:
+        return response
+
+
+def init_openai_azure():
+    openai.api_type = "azure"
+    openai.api_key = API_KEY
+    openai.api_base = RESOURCE_ENDPOINT
+    openai.api_version = AZURE_API_VERSION
+
+API_KEY = ""
+RESOURCE_ENDPOINT = "https://chatspg.openai.azure.com/"
+AZURE_API_VERSION = "2023-12-01-preview"
+AZURE_GPT_ENGINE = "chatty4"
+init_openai_azure()
+
+# Prepare your message history
+message_history = [
+    {"role": "system", "content": "Assistant is a large language model trained by OpenAI."},
+    {"role": "user", "content": "Who were the founders of Microsoft?"}
+]
+
+# Call the ask_gpt function
+response = ask_gpt(message_history)
+print(response)
